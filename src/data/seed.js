@@ -7,8 +7,9 @@ import { Attraction } from '../models/Attraction.js';
 import { bergenAttractions } from './bergen.js';
 import { bergenExtraAttractions } from './bergenExtra.js';
 import { osloAttractions } from './oslo.js';
+import { osloExtraAttractions } from './osloExtra.js';
 
-const ALL = [...bergenAttractions, ...bergenExtraAttractions, ...osloAttractions];
+const ALL = [...bergenAttractions, ...bergenExtraAttractions, ...osloAttractions, ...osloExtraAttractions];
 
 async function seed() {
   await connectDb(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/norway_attractions');
