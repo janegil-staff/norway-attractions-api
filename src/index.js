@@ -3,7 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@as-integrations/express5';
+import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
 
@@ -11,6 +11,7 @@ import { connectDb } from './config/db.js';
 import { typeDefs } from './schema/typeDefs.js';
 import { resolvers } from './resolvers/index.js';
 import { resolveApiKey } from './middleware/apiKeyAuth.js';
+import { restRouter } from './rest/routes.js';
 
 const PORT = process.env.PORT || 4000;
 const REQUIRE_KEY = process.env.REQUIRE_API_KEY === 'true'; // off in dev, on in prod
@@ -46,8 +47,13 @@ async function start() {
 
   app.get('/health', (_req, res) => res.json({ ok: true }));
 
+  // REST layer alongside GraphQL — browsable URLs under /api
+  app.use('/api', cors(), express.json(), restRouter);
+
   await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
-  console.log(`🚀 Norway Attractions API ready at http://localhost:${PORT}/graphql`);
+  console.log(`🚀 Norway Attractions API ready`);
+  console.log(`   GraphQL:  http://localhost:${PORT}/graphql`);
+  console.log(`   REST:     http://localhost:${PORT}/api/attractions`);
 }
 
 start().catch((e) => {
