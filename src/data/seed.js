@@ -5,9 +5,10 @@ import 'dotenv/config';
 import { connectDb } from '../config/db.js';
 import { Attraction } from '../models/Attraction.js';
 import { bergenAttractions } from './bergen.js';
-// import { osloAttractions } from './oslo.js';  // add when Bergen is solid
+import { bergenExtraAttractions } from './bergenExtra.js';
+import { osloAttractions } from './oslo.js';
 
-const ALL = [...bergenAttractions /*, ...osloAttractions */];
+const ALL = [...bergenAttractions, ...bergenExtraAttractions, ...osloAttractions];
 
 async function seed() {
   await connectDb(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/norway_attractions');
