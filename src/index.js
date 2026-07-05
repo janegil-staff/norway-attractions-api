@@ -3,7 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import http from 'http';
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@as-integrations/express5';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import cors from 'cors';
 
@@ -12,6 +12,7 @@ import { typeDefs } from './schema/typeDefs.js';
 import { resolvers } from './resolvers/index.js';
 import { resolveApiKey } from './middleware/apiKeyAuth.js';
 import { restRouter } from './rest/routes.js';
+import { landingPage } from './rest/landing.js';
 
 const PORT = process.env.PORT || 4000;
 const REQUIRE_KEY = process.env.REQUIRE_API_KEY === 'true'; // off in dev, on in prod
@@ -20,6 +21,7 @@ async function start() {
   await connectDb(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/norway_attractions');
 
   const app = express();
+  app.set('json spaces', 2); // pretty-print JSON so it reads well in a browser
   const httpServer = http.createServer(app);
 
   const server = new ApolloServer({
@@ -46,6 +48,13 @@ async function start() {
   );
 
   app.get('/health', (_req, res) => res.json({ ok: true }));
+
+  // Friendly HTML landing page at the root so opening the base URL in a browser
+  // (phone or desktop) shows readable docs with tappable example links.
+  app.get('/', (req, res) => {
+    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    res.type('html').send(landingPage(baseUrl));
+  });
 
   // REST layer alongside GraphQL — browsable URLs under /api
   app.use('/api', cors(), express.json(), restRouter);
