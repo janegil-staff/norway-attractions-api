@@ -1,0 +1,26 @@
+{
+  "name": "norway-attractions-api",
+  "version": "1.0.0",
+  "description": "GraphQL API for curated Norwegian attractions, hikes, and points of interest.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "seed": "node src/data/seed.js",
+    "create-key": "node src/data/createApiKey.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/server": "^5.5.1",
+    "@as-integrations/express5": "^1.1.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "graphql": "^16.14.2",
+    "mongodb-memory-server": "^11.2.0",
+    "mongoose": "^9.7.3"
+  }
+}
